@@ -4,13 +4,18 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
-const { testUri, userUri } = require('./configuration')
+const { atlasUri, userUri, testUri } = require('./configuration')
 
 mongoose.Promise = global.Promise
 if (process.env.NODE_ENV == 'test') {
   mongoose.connect(testUri, { useNewUrlParser: true })
     .catch((error) => {
       console.error(error + '\nCheck whether service mongod has started correctly - sudo service mongod start')
+    })
+} else if (process.env.NODE_ENV == 'prod') {
+  mongoose.connect(atlasUri, { useNewUrlParser: true })
+    .catch((error) => {
+      console.error(error + '\nAdd current IP to Atlas MongoDB + sudo service mongod start')
     })
 } else {
   mongoose.connect(userUri, { useNewUrlParser: true })
@@ -31,17 +36,5 @@ app.use(bodyParser.json())
 
 // Routes
 app.use('/users', require('./routes/users'))
-
-// // Handler for 404 - Resource Not Found
-// app.use((req, res, next) => {
-//   console.info(status[404])
-//   res.status(404).send('We think you are lost!')
-// })
-
-// // Handler for Error 500 - Internal Server Error
-// app.use((err, req, res, next) => {
-//   console.info(status[500])
-//   res.status(500).send('Internal Server Error...')
-// })
 
 module.exports = app
