@@ -125,3 +125,35 @@ export const signOut = () => {
     })
   }
 }
+
+export const linkGoogle = data => {
+  return async dispatch => {
+    const res = await axios.post('http://localhost:5000/users/oauth/link/google', {
+      access_token: data
+    })
+
+    dispatch({
+      type: AUTH_SIGN_UP,
+      payload: res.data.token
+    })
+
+    localStorage.setItem('JWT_TOKEN', res.data.token)
+    axios.defaults.headers.common['Authorization'] = res.data.token
+  }
+}
+
+export const linkFacebook = data => {
+  return async dispatch => {
+    const res = await axios.post('http://localhost:5000/users/oauth/link/facebook', {
+      access_token: data
+    })
+
+    dispatch({
+      type: AUTH_SIGN_UP,
+      payload: res.data.token
+    })
+
+    localStorage.setItem('JWT_TOKEN', res.data.token)
+    axios.defaults.headers.common['Authorization'] = res.data.token
+  }
+}

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import GoogleLogin from 'react-google-login'
+import FacebookLogin from 'react-facebook-login'
 
 import * as actions from '../actions'
 
@@ -8,12 +10,37 @@ class Dashboard extends Component {
     this.props.getSecret()
   }
 
+  linkFacebook = (res) => {
+    console.log('Link with FB', res)
+    //  await this.props.oauthFacebook(res.accessToken)
+  }
+
+  linkGoogle = (res) => {
+    console.log('Link with Google', res)
+    //  await this.props.oauthGoogle(res.accessToken)
+  }
+
   render() {
     return (
       <div>
         This is a Dashboard component
         <br />
         Our secret: <h3>{this.props.secret}</h3>
+        <br />
+        <FacebookLogin
+          appId="342011239791372"
+          textButton="Facebook"
+          fields="name,email,picture"
+          callback={this.responseFacebook}
+          cssClass="btn btn-outline-primary"
+        />
+        <GoogleLogin
+          clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
+          buttonText="Google"
+          onSuccess={this.linkGoogle}
+          onFailure={this.linkGoogle}
+          className="btn btn-outline-danger"
+        />
       </div>
     )
   }
