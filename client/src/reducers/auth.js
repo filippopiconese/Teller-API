@@ -8,6 +8,7 @@ import {
 const DEFAULT_STATE = {
   isAuthenticated: false,
   token: '',
+  authMethods: [],
   errorMessage: ''
 }
 

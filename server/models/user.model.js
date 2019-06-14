@@ -4,9 +4,8 @@ const Schema = mongoose.Schema
 
 // Create a schema
 const userSchema = new Schema({
-  method: {
-    type: String,
-    enum: ['local', 'google', 'facebook'],
+  methods: {
+    type: [String],
     required: true
   },
   local: {
@@ -41,7 +40,7 @@ const userSchema = new Schema({
 // We want to salt&hash the password before the save action takes place
 userSchema.pre('save', async function (next) {
   try {
-    if (this.method !== 'local') {
+    if (!this.methods.includes('local')) {
       next() // we won't have any password, so just skip this function
     }
 
