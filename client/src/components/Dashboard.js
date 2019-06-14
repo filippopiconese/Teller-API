@@ -10,9 +10,9 @@ class Dashboard extends Component {
     this.props.getSecret()
   }
 
-  linkFacebook = (res) => {
+  linkFacebook = async (res) => {
     console.log('Link with FB', res)
-    // await this.props.oauthFacebook(res.accessToken)
+    await this.props.linkFacebook(res.accessToken)
   }
 
   linkGoogle = async (res) => {
@@ -31,7 +31,7 @@ class Dashboard extends Component {
           appId="342011239791372"
           textButton="Facebook"
           fields="name,email,picture"
-          callback={this.responseFacebook}
+          callback={this.linkFacebook}
           cssClass="btn btn-outline-primary"
         />
         <GoogleLogin

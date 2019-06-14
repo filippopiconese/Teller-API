@@ -97,43 +97,59 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
 // FACEBOOK OAUTH STRATEGY
 passport.use('facebookToken', new FacebookTokenStrategy({
   clientID: oauth.facebook.clientID,
-  clientSecret: oauth.facebook.clientSecret
-}, async (accessToken, refreshToken, profile, done) => {
+  clientSecret: oauth.facebook.clientSecret,
+  passReqToCallback: true
+}, async (req, accessToken, refreshToken, profile, done) => {
   try {
     console.log('profile', profile)
     console.log('accessToken', accessToken)
     console.log('refreshToken', refreshToken)
 
-    // Check whether this current user exists in our DB
-    let existingUser = await User.findOne({ "facebook.id": profile.id })
-    if (existingUser) {
-      return done(null, existingUser)
-    }
+    if (req.user) {
+      // We are already logged in, time for linking account!
 
-    // Check if we have someone with the same email
-    existingUser = await User.findOne({ "local.email": profile.emails[0].value })
-    if (existingUser) {
-      // We want to merge facebook's data with local auth
-      existingUser.facebook = {
+      // Add Facebook's data to an existing account
+      req.user.facebook = {
         id: profile.id,
         email: profile.emails[0].value
       }
 
-      await existingUser.save()
-      return done(null, existingUser)
-    }
+      await req.user.save()
+      return done(null, req.user)
+    } else {
+      // We are in the account creation process!
 
-    // If new account
-    const newUser = new User({
-      method: 'facebook',
-      facebook: {
-        id: profile.id,
-        email: profile.emails[0].value
+      // Check whether this current user exists in our DB
+      let existingUser = await User.findOne({ "facebook.id": profile.id })
+      if (existingUser) {
+        return done(null, existingUser)
       }
-    })
 
-    await newUser.save()
-    done(null, newUser)
+      // Check if we have someone with the same email
+      existingUser = await User.findOne({ "local.email": profile.emails[0].value })
+      if (existingUser) {
+        // We want to merge facebook's data with local auth
+        existingUser.facebook = {
+          id: profile.id,
+          email: profile.emails[0].value
+        }
+
+        await existingUser.save()
+        return done(null, existingUser)
+      }
+
+      // If new account
+      const newUser = new User({
+        method: 'facebook',
+        facebook: {
+          id: profile.id,
+          email: profile.emails[0].value
+        }
+      })
+
+      await newUser.save()
+      done(null, newUser)
+    }
   } catch (error) {
     done(error, false, error.message)
   }

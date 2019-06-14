@@ -43,7 +43,6 @@ export const oauthFacebook = data => {
   }
 }
 
-
 export const signUp = data => {
   /*
     Step 1) Use the form data and make HTTP request to our Back-End and send it along (axios library needed) [X]
@@ -74,23 +73,6 @@ export const signUp = data => {
   }
 }
 
-export const getSecret = () => {
-  return async dispatch => {
-    try {
-      console.log('[ActionCreator] Trying to get back-end secret')
-      const res = await axios.get('http://localhost:5000/users/secret')
-      console.log('res', res)
-
-      dispatch({
-        type: DASHBOARD_GET_DATA,
-        payload: res.data.secret
-      })
-    } catch (error) {
-      console.error('error', error)
-    }
-  }
-}
-
 export const signIn = data => {
   return async dispatch => {
     try {
@@ -114,6 +96,23 @@ export const signIn = data => {
   }
 }
 
+export const getSecret = () => {
+  return async dispatch => {
+    try {
+      console.log('[ActionCreator] Trying to get back-end secret')
+      const res = await axios.get('http://localhost:5000/users/secret')
+      console.log('res', res)
+
+      dispatch({
+        type: DASHBOARD_GET_DATA,
+        payload: res.data.secret
+      })
+    } catch (error) {
+      console.error('error', error)
+    }
+  }
+}
+
 export const signOut = () => {
   return dispatch => {
     localStorage.removeItem('JWT_TOKEN')
@@ -132,15 +131,7 @@ export const linkGoogle = data => {
       access_token: data
     })
 
-    console.log('res in action creator', res)
-
-    // dispatch({
-    //   type: AUTH_SIGN_UP,
-    //   payload: res.data.token
-    // })
-
-    // localStorage.setItem('JWT_TOKEN', res.data.token)
-    // axios.defaults.headers.common['Authorization'] = res.data.token
+    console.log('res in action creator - Google', res)
   }
 }
 
@@ -150,12 +141,6 @@ export const linkFacebook = data => {
       access_token: data
     })
 
-    dispatch({
-      type: AUTH_SIGN_UP,
-      payload: res.data.token
-    })
-
-    localStorage.setItem('JWT_TOKEN', res.data.token)
-    axios.defaults.headers.common['Authorization'] = res.data.token
+    console.log('res in action creator - Facebook', res)
   }
 }
