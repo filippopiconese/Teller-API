@@ -11,8 +11,9 @@ const User = require('./models/user.model')
 // JSON WEB TOKENS STRATEGY
 passport.use(new JwtStrategy({
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: jwt_secret
-}, async (payload, done) => {
+  secretOrKey: jwt_secret,
+  passReqToCallback: true
+}, async (req, payload, done) => {
   try {
     // Find the user specified in token
     const user = await User.findById(payload.sub)
@@ -22,7 +23,8 @@ passport.use(new JwtStrategy({
       return done(null, false)
     }
 
-    // Otherwise, return the user
+    // Otherwise, save and return the user
+    req.user = user
     done(null, user)
   } catch (error) {
     done(error, false)
@@ -32,44 +34,61 @@ passport.use(new JwtStrategy({
 // GOOGLE OAUTH STRATEGY
 passport.use('googleToken', new GooglePlusTokenStrategy({
   clientID: oauth.google.clientID,
-  clientSecret: oauth.google.clientSecret
-}, async (accessToken, refreshToken, profile, done) => {
+  clientSecret: oauth.google.clientSecret,
+  passReqToCallback: true
+}, async (req, accessToken, refreshToken, profile, done) => {
   try {
+    // Full user profice information
+    console.log('profile', profile)
     console.log('accessToken', accessToken)
     console.log('refreshToken', refreshToken)
-    console.log('profile', profile)
 
-    // Check whether this current user exists in our DB
-    let existingUser = await User.findOne({ "google.id": profile.id })
-    if (existingUser) {
-      console.log('User already exists in our DB')
-      return done(null, existingUser)
-    }
+    if (req.user) {
+      // We are already logged in, time for linking account!
 
-    // Check if we have someone with the same email
-    existingUser = await User.findOne({ "local.email": profile.emails[0].value })
-    if (existingUser) {
-      // We want to merge google's data with local auth
-      existingUser.google = {
+      // Add Google's data to an existing account
+      req.user.google = {
         id: profile.id,
         email: profile.emails[0].value
       }
 
-      await existingUser.save()
-      return done(null, existingUser)
-    }
+      await req.user.save()
+      return done(null, req.user)
+    } else {
+      // We are in the account creation process!
 
-    // If new account
-    const newUser = new User({
-      method: 'google',
-      google: {
-        id: profile.id,
-        email: profile.emails[0].value
+      // Check whether this current user exists in our DB
+      let existingUser = await User.findOne({ "google.id": profile.id })
+      if (existingUser) {
+        console.log('User already exists in our DB')
+        return done(null, existingUser)
       }
-    })
 
-    await newUser.save()
-    done(null, newUser)
+      // Check if we have someone with the same email
+      existingUser = await User.findOne({ "local.email": profile.emails[0].value })
+      if (existingUser) {
+        // We want to merge google's data with local auth
+        existingUser.google = {
+          id: profile.id,
+          email: profile.emails[0].value
+        }
+
+        await existingUser.save()
+        return done(null, existingUser)
+      }
+
+      // If new account
+      const newUser = new User({
+        method: 'google',
+        google: {
+          id: profile.id,
+          email: profile.emails[0].value
+        }
+      })
+
+      await newUser.save()
+      done(null, newUser)
+    }
   } catch (error) {
     done(error, false, error.message)
   }
@@ -81,9 +100,9 @@ passport.use('facebookToken', new FacebookTokenStrategy({
   clientSecret: oauth.facebook.clientSecret
 }, async (accessToken, refreshToken, profile, done) => {
   try {
+    console.log('profile', profile)
     console.log('accessToken', accessToken)
     console.log('refreshToken', refreshToken)
-    console.log('profile', profile)
 
     // Check whether this current user exists in our DB
     let existingUser = await User.findOne({ "facebook.id": profile.id })

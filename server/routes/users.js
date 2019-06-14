@@ -23,7 +23,7 @@ router.route('/oauth/facebook')
   .post(passportFacebook, UserController.facebookOAuth)
 
 router.route('/oauth/link/google')
-  .post(passport.authorize('googleToken', { session: false }))
+  .post(passportJWT, passport.authorize('googleToken', { session: false }))
 
 router.route('/secret')
   .get(passportJWT, UserController.secret)

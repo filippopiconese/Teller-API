@@ -132,13 +132,15 @@ export const linkGoogle = data => {
       access_token: data
     })
 
-    dispatch({
-      type: AUTH_SIGN_UP,
-      payload: res.data.token
-    })
+    console.log('res in action creator', res)
 
-    localStorage.setItem('JWT_TOKEN', res.data.token)
-    axios.defaults.headers.common['Authorization'] = res.data.token
+    // dispatch({
+    //   type: AUTH_SIGN_UP,
+    //   payload: res.data.token
+    // })
+
+    // localStorage.setItem('JWT_TOKEN', res.data.token)
+    // axios.defaults.headers.common['Authorization'] = res.data.token
   }
 }
 

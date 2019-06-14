@@ -12,12 +12,12 @@ class Dashboard extends Component {
 
   linkFacebook = (res) => {
     console.log('Link with FB', res)
-    //  await this.props.oauthFacebook(res.accessToken)
+    // await this.props.oauthFacebook(res.accessToken)
   }
 
-  linkGoogle = (res) => {
+  linkGoogle = async (res) => {
     console.log('Link with Google', res)
-    //  await this.props.oauthGoogle(res.accessToken)
+    await this.props.linkGoogle(res.accessToken)
   }
 
   render() {
