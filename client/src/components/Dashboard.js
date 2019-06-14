@@ -29,17 +29,18 @@ class Dashboard extends Component {
         <br />
         <FacebookLogin
           appId="342011239791372"
-          textButton="Facebook"
+          textButton="Link with Facebook"
           fields="name,email,picture"
           callback={this.linkFacebook}
           cssClass="btn btn-outline-primary"
         />
         <GoogleLogin
           clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
-          buttonText="Google"
+          render={renderProps => (
+            <button className="btn btn-outline-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
+          )}
           onSuccess={this.linkGoogle}
           onFailure={this.linkGoogle}
-          className="btn btn-outline-danger"
         />
       </div>
     )
