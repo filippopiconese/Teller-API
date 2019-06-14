@@ -54,6 +54,10 @@ module.exports = {
     res.status(200).json({ token })
   },
 
+  linkGoogle: async (req, res, next) => {
+    res.json({ success: true, message: 'Successfully linked account with Google' })
+  },
+
   facebookOAuth: async (req, res, next) => {
     // Generate token
     const token = signToken(req.user)
@@ -61,8 +65,12 @@ module.exports = {
     res.status(200).json({ token })
   },
 
+  linkFacebook: async (req, res, next) => {
+    res.json({ success: true, message: 'Successfully linked account with Facebook' })
+  },
+
   secret: async (req, res, next) => {
     console.log('I managed to get here!')
-    res.json({ secret: "Resource" })
+    res.json({ secret: 'Resource' })
   }
 }
