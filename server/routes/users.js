@@ -28,7 +28,7 @@ router.route('/oauth/link/google')
 router.route('/oauth/link/facebook')
   .post(passportJWT, passport.authorize('facebookToken', { session: false }), UserController.linkFacebook)
 
-router.route('/secret')
-  .get(passportJWT, UserController.secret)
+router.route('/dashboard')
+  .get(passportJWT, UserController.dashboard)
 
 module.exports = router

@@ -96,16 +96,16 @@ export const signIn = data => {
   }
 }
 
-export const getSecret = () => {
+export const getDashboard = () => {
   return async dispatch => {
     try {
-      console.log('[ActionCreator] Trying to get back-end secret')
-      const res = await axios.get('http://localhost:5000/users/secret')
+      console.log('[ActionCreator] Trying to get back-end dashboard')
+      const res = await axios.get('http://localhost:5000/users/dashboard')
       console.log('res', res)
 
       dispatch({
         type: DASHBOARD_GET_DATA,
-        payload: res.data.secret
+        payload: res.data
       })
     } catch (error) {
       console.error('error', error)

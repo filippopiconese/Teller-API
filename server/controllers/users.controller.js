@@ -39,10 +39,7 @@ module.exports = {
       const token = signToken(foundUser)
 
       // Respond with token
-      return res.status(200).json({
-        token,
-        methods: foundUser.methods
-      })
+      return res.status(200).json({ token })
     }
 
     // Is there a Facebook account with the same email?
@@ -61,10 +58,7 @@ module.exports = {
       const token = signToken(foundUser)
 
       // Respond with token
-      return res.status(200).json({
-        token,
-        methods: foundUser.methods
-      })
+      return res.status(200).json({ token })
     }
 
     // Create a new user
@@ -81,30 +75,21 @@ module.exports = {
     const token = signToken(newUser)
 
     // Respond with token
-    res.status(200).json({
-      token,
-      methods: newUser.methods
-    })
+    res.status(200).json({ token })
   },
 
   signIn: async (req, res, next) => {
     // Generate token
     const token = signToken(req.user)
 
-    res.status(200).json({
-      token,
-      methods: req.user.methods
-    })
+    res.status(200).json({ token })
   },
 
   googleOAuth: async (req, res, next) => {
     // Generate token
     const token = signToken(req.user)
 
-    res.status(200).json({
-      token,
-      methods: req.user.methods
-    })
+    res.status(200).json({ token })
   },
 
   linkGoogle: async (req, res, next) => {
@@ -115,18 +100,18 @@ module.exports = {
     // Generate token
     const token = signToken(req.user)
 
-    res.status(200).json({
-      token,
-      methods: req.user.methods
-    })
+    res.status(200).json({ token })
   },
 
   linkFacebook: async (req, res, next) => {
     res.json({ success: true, message: 'Successfully linked account with Facebook' })
   },
 
-  secret: async (req, res, next) => {
+  dashboard: async (req, res, next) => {
     console.log('I managed to get here!')
-    res.json({ secret: 'Resource' })
+    res.json({
+      secret: 'Resource',
+      methods: req.user.methods
+    })
   }
 }

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import GoogleLogin from 'react-google-login'
-import FacebookLogin from 'react-facebook-login'
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
 import * as actions from '../actions'
 
 class Dashboard extends Component {
   componentDidMount() {
-    this.props.getSecret()
+    this.props.getDashboard()
   }
 
   linkFacebook = async (res) => {
@@ -30,15 +30,16 @@ class Dashboard extends Component {
         <h2>Link your social media accounts</h2>
         <FacebookLogin
           appId="342011239791372"
-          textButton="Link with Facebook"
+          render={renderProps => (
+            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Facebook</button>
+          )}
           fields="name,email,picture"
           callback={this.linkFacebook}
-          cssClass="btn btn-outline-primary"
         />
         <GoogleLogin
           clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
           render={renderProps => (
-            <button className="btn btn-outline-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
+            <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
           )}
           onSuccess={this.linkGoogle}
           onFailure={this.linkGoogle}
@@ -49,15 +50,16 @@ class Dashboard extends Component {
         <h2>Unlink your social media accounts</h2>
         <FacebookLogin
           appId="342011239791372"
-          textButton="Link with Facebook"
+          render={renderProps => (
+            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Facebook</button>
+          )}
           fields="name,email,picture"
           callback={this.linkFacebook}
-          cssClass="btn btn-outline-primary"
         />
         <GoogleLogin
           clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
           render={renderProps => (
-            <button className="btn btn-outline-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
+            <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
           )}
           onSuccess={this.linkGoogle}
           onFailure={this.linkGoogle}
