@@ -19,7 +19,7 @@ export const oauthGoogle = data => {
 
     dispatch({
       type: AUTH_SIGN_UP,
-      payload: res.data.token
+      payload: res.data
     })
 
     localStorage.setItem('JWT_TOKEN', res.data.token)
@@ -35,7 +35,7 @@ export const oauthFacebook = data => {
 
     dispatch({
       type: AUTH_SIGN_UP,
-      payload: res.data.token
+      payload: res.data
     })
 
     localStorage.setItem('JWT_TOKEN', res.data.token)
@@ -59,7 +59,7 @@ export const signUp = data => {
       console.log('[ActionCreator] signUp dispatched an action!')
       dispatch({
         type: AUTH_SIGN_UP,
-        payload: res.data.token
+        payload: res.data
       })
 
       localStorage.setItem('JWT_TOKEN', res.data.token)
@@ -82,7 +82,7 @@ export const signIn = data => {
       console.log('[ActionCreator] signIn dispatched an action!')
       dispatch({
         type: AUTH_SIGN_IN,
-        payload: res.data.token
+        payload: res.data
       })
 
       localStorage.setItem('JWT_TOKEN', res.data.token)

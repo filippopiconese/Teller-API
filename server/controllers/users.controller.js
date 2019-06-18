@@ -17,10 +17,54 @@ module.exports = {
     const { email, password } = req.value.body
 
     // Check if there is a user with the same email
-    const foundUser = await User.findOne({ "local.email": email })
+    let foundUser = await User.findOne({ "local.email": email })
     if (foundUser) {
       console.info(status[403])
       return res.status(403).json({ error: 'Email is already in use' })
+    }
+
+    // Is there a Google account with the same email?
+    foundUser = await User.findOne({ "google.email": email })
+
+    if (foundUser) {
+      // Let's merge them
+      foundUser.methods.push('local')
+      foundUser.local = {
+        email: email,
+        password: password
+      }
+      await foundUser.save()
+
+      // Generate new token
+      const token = signToken(foundUser)
+
+      // Respond with token
+      return res.status(200).json({
+        token,
+        methods: foundUser.methods
+      })
+    }
+
+    // Is there a Facebook account with the same email?
+    foundUser = await User.findOne({ "facebook.email": email })
+
+    if (foundUser) {
+      // Let's merge them
+      foundUser.methods.push('local')
+      foundUser.local = {
+        email: email,
+        password: password
+      }
+      await foundUser.save()
+
+      // Generate new token
+      const token = signToken(foundUser)
+
+      // Respond with token
+      return res.status(200).json({
+        token,
+        methods: foundUser.methods
+      })
     }
 
     // Create a new user
@@ -37,21 +81,30 @@ module.exports = {
     const token = signToken(newUser)
 
     // Respond with token
-    res.status(200).json({ token })
+    res.status(200).json({
+      token,
+      methods: newUser.methods
+    })
   },
 
   signIn: async (req, res, next) => {
     // Generate token
     const token = signToken(req.user)
 
-    res.status(200).json({ token })
+    res.status(200).json({
+      token,
+      methods: req.user.methods
+    })
   },
 
   googleOAuth: async (req, res, next) => {
     // Generate token
     const token = signToken(req.user)
 
-    res.status(200).json({ token })
+    res.status(200).json({
+      token,
+      methods: req.user.methods
+    })
   },
 
   linkGoogle: async (req, res, next) => {
@@ -62,7 +115,10 @@ module.exports = {
     // Generate token
     const token = signToken(req.user)
 
-    res.status(200).json({ token })
+    res.status(200).json({
+      token,
+      methods: req.user.methods
+    })
   },
 
   linkFacebook: async (req, res, next) => {
