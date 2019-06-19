@@ -31,13 +31,14 @@ class Dashboard extends Component {
         <FacebookLogin
           appId="342011239791372"
           render={renderProps => (
-            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Facebook</button>
+            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={this.props.dashboard.methods.includes('facebook') ? true : false}>Link with Facebook</button>
           )}
           fields="name,email,picture"
           callback={this.linkFacebook}
         />
         <GoogleLogin
           clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
+          disabled={this.props.dashboard.methods.includes('google') ? true : false}
           render={renderProps => (
             <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
           )}
@@ -51,7 +52,7 @@ class Dashboard extends Component {
         <FacebookLogin
           appId="342011239791372"
           render={renderProps => (
-            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Facebook</button>
+            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>Unlink with Facebook</button>
           )}
           fields="name,email,picture"
           callback={this.linkFacebook}
@@ -59,7 +60,7 @@ class Dashboard extends Component {
         <GoogleLogin
           clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
           render={renderProps => (
-            <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Link with Google</button>
+            <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Unlink with Google</button>
           )}
           onSuccess={this.linkGoogle}
           onFailure={this.linkGoogle}
@@ -70,9 +71,9 @@ class Dashboard extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log('state', state)
   return {
     secret: state.dashboard.secret,
+    dashboard: state.dashboard,
     auth: state.auth
   }
 }

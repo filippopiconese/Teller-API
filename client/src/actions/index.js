@@ -4,6 +4,8 @@ import {
   AUTH_SIGN_UP,
   AUTH_SIGN_OUT,
   AUTH_SIGN_IN,
+  AUTH_LINK_GOOGLE,
+  AUTH_LINK_FACEBOOK,
   AUTH_ERROR,
   DASHBOARD_GET_DATA
 } from './types'
@@ -53,10 +55,9 @@ export const signUp = data => {
 
   return async dispatch => {
     try {
-      console.log('[ActionCreator] signUp called!')
+      console.log('[ActionCreator] signUp called!', data)
       const res = await axios.post('http://localhost:5000/users/signup', data)
 
-      console.log('[ActionCreator] signUp dispatched an action!')
       dispatch({
         type: AUTH_SIGN_UP,
         payload: res.data
@@ -99,9 +100,7 @@ export const signIn = data => {
 export const getDashboard = () => {
   return async dispatch => {
     try {
-      console.log('[ActionCreator] Trying to get back-end dashboard')
       const res = await axios.get('http://localhost:5000/users/dashboard')
-      console.log('res', res)
 
       dispatch({
         type: DASHBOARD_GET_DATA,
@@ -131,7 +130,10 @@ export const linkGoogle = data => {
       access_token: data
     })
 
-    console.log('res in action creator - Google', res)
+    dispatch({
+      type: AUTH_LINK_GOOGLE,
+      payload: res.data
+    })
   }
 }
 
@@ -141,6 +143,9 @@ export const linkFacebook = data => {
       access_token: data
     })
 
-    console.log('res in action creator - Facebook', res)
+    dispatch({
+      type: AUTH_LINK_FACEBOOK,
+      payload: res.data
+    })
   }
 }

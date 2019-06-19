@@ -93,7 +93,11 @@ module.exports = {
   },
 
   linkGoogle: async (req, res, next) => {
-    res.json({ success: true, message: 'Successfully linked account with Google' })
+    res.json({
+      success: true,
+      methods: req.user.methods,
+      message: 'Successfully linked account with Google'
+    })
   },
 
   facebookOAuth: async (req, res, next) => {
@@ -104,7 +108,11 @@ module.exports = {
   },
 
   linkFacebook: async (req, res, next) => {
-    res.json({ success: true, message: 'Successfully linked account with Facebook' })
+    res.json({
+      success: true,
+      methods: req.user.methods,
+      message: 'Successfully linked account with Facebook'
+    })
   },
 
   dashboard: async (req, res, next) => {

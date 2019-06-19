@@ -16,7 +16,6 @@ class SignUp extends Component {
   }
 
   async onSubmit(formData) {
-    console.log('onSubmit() called')
     console.log('formData', formData)
 
     // We need to call some Action Creator
