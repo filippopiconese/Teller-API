@@ -1,5 +1,6 @@
 const status = require('http-status')
 const JWT = require('jsonwebtoken')
+const TellerCodes = require('../models/tellerCodes.model')
 const User = require('../models/user.model')
 const { jwt_secret } = require('../configuration')
 
@@ -16,9 +17,9 @@ module.exports = {
   signUp: async (req, res, next) => {
     const { code, email, password } = req.value.body
 
-    // // Check if the code exists
-    // let existCode = await User.findOne({ "local.email": email })
-    // if (foundUser) {
+    // Check if the code exists
+    // let existCode = await TellerCodes.findOne({ "code": code })
+    // if (!existCode) {
     //   console.info(status[404])
     //   return res.status(404).json({ error: 'Code not found' })
     // }
