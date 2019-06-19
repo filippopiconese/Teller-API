@@ -19,17 +19,21 @@ describe('Users route', () => {
     password: faker.internet.password(),
     code: '1'
   }
-  const preSave = {
+  const preSaveSignUP = {
     email: 'mr.sometest@gmail.com',
     password: 'password',
     code: '1'
+  }
+  const preSaveSignIN = {
+    email: 'mr.sometest@gmail.com',
+    password: 'password',
   }
 
   before(async () => {
     const res = await chai
       .request(server)
       .post(signup)
-      .send(preSave)
+      .send(preSaveSignUP)
     expect(res.status).to.equal(200)
     token = res.body.token
   })
@@ -61,7 +65,7 @@ describe('Users route', () => {
         await chai
           .request(server)
           .post(signup)
-          .send(preSave)
+          .send(preSaveSignUP)
       } catch (err) {
         expect(err.status).to.equal(403)
         expect(err.response.text).to.equal('{"error":"Email is already in use"}')
@@ -111,7 +115,7 @@ describe('Users route', () => {
         const res = await chai
           .request(server)
           .post(signin)
-          .send(preSave)
+          .send(preSaveSignIN)
 
         expect(res.status).to.be.equal(200)
         expect(res.body).not.to.be.empty

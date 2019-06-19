@@ -38,11 +38,6 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
   passReqToCallback: true
 }, async (req, accessToken, refreshToken, profile, done) => {
   try {
-    // Full user profice information
-    console.log('profile', profile)
-    console.log('accessToken', accessToken)
-    console.log('refreshToken', refreshToken)
-
     if (req.user) {
       // We are already logged in, time for linking account!
 
@@ -61,7 +56,6 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
       // Check whether this current user exists in our DB
       let existingUser = await User.findOne({ "google.id": profile.id })
       if (existingUser) {
-        console.log('User already exists in our DB')
         return done(null, existingUser)
       }
 
@@ -79,17 +73,8 @@ passport.use('googleToken', new GooglePlusTokenStrategy({
         return done(null, existingUser)
       }
 
-      // If new account
-      const newUser = new User({
-        methods: ['google'],
-        google: {
-          id: profile.id,
-          email: profile.emails[0].value
-        }
-      })
-
-      await newUser.save()
-      done(null, newUser)
+      // If new account, you have BEFORE to sign-up inserting the toy code, the email and choose a password.
+      return done(null, false, { message: 'You have not an account, yet!' });
     }
   } catch (error) {
     done(error, false, error.message)
@@ -103,10 +88,6 @@ passport.use('facebookToken', new FacebookTokenStrategy({
   passReqToCallback: true
 }, async (req, accessToken, refreshToken, profile, done) => {
   try {
-    console.log('profile', profile)
-    console.log('accessToken', accessToken)
-    console.log('refreshToken', refreshToken)
-
     if (req.user) {
       // We are already logged in, time for linking account!
 

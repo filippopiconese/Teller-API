@@ -50,7 +50,6 @@ export const oauthFacebook = data => {
 export const signUp = data => {
   return async dispatch => {
     try {
-      console.log('[ActionCreator] signUp called!', data)
       const res = await axios.post('http://localhost:5000/users/signup', data)
 
       dispatch({
@@ -72,10 +71,8 @@ export const signUp = data => {
 export const signIn = data => {
   return async dispatch => {
     try {
-      console.log('[ActionCreator] signIn called!')
       const res = await axios.post('http://localhost:5000/users/signin', data)
 
-      console.log('[ActionCreator] signIn dispatched an action!')
       dispatch({
         type: AUTH_SIGN_IN,
         payload: res.data

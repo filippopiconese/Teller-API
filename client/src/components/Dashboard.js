@@ -11,22 +11,18 @@ class Dashboard extends Component {
   }
 
   linkFacebook = async (res) => {
-    console.log('Link with FB', res)
     await this.props.linkFacebook(res.accessToken)
   }
 
   unlinkFacebook = async () => {
-    console.log('Unlink Facebook')
     await this.props.unlinkFacebook()
   }
 
   linkGoogle = async (res) => {
-    console.log('Link with Google', res)
     await this.props.linkGoogle(res.accessToken)
   }
 
   unlinkGoogle = async () => {
-    console.log('Unlink Google')
     await this.props.unlinkGoogle()
   }
 

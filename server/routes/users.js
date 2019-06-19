@@ -11,10 +11,10 @@ const passportFacebook = passport.authenticate('facebookToken', { session: false
 const passportJWT = passport.authenticate('jwt', { session: false })
 
 router.route('/signup')
-  .post(validateBody(schemas.authSchema), UserController.signUp)
+  .post(validateBody(schemas.signupSchema), UserController.signUp)
 
 router.route('/signin')
-  .post(validateBody(schemas.authSchema), passportSignIn, UserController.signIn)
+  .post(validateBody(schemas.signinSchema), passportSignIn, UserController.signIn)
 
 router.route('/oauth/google')
   .post(passportGoogle, UserController.googleOAuth)

@@ -14,7 +14,6 @@ const DEFAULT_STATE = {
 export default (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case AUTH_SIGN_UP:
-      console.log('\n\naction.payload\n', action.payload)
       return { ...state, token: action.payload.token, isAuthenticated: true, errorMessage: '' }
     case AUTH_SIGN_IN:
       return { ...state, token: action.payload.token, isAuthenticated: true, errorMessage: '' }

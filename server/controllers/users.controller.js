@@ -14,7 +14,21 @@ signToken = user => {
 
 module.exports = {
   signUp: async (req, res, next) => {
-    const { email, password } = req.value.body
+    const { code, email, password } = req.value.body
+
+    // // Check if the code exists
+    // let existCode = await User.findOne({ "local.email": email })
+    // if (foundUser) {
+    //   console.info(status[404])
+    //   return res.status(404).json({ error: 'Code not found' })
+    // }
+
+    // // Check if the code is available
+    // let foundUser = await User.findOne({ "local.email": email })
+    // if (foundUser) {
+    //   console.info(status[409])
+    //   return res.status(409).json({ error: 'Code already in use' })
+    // }
 
     // Check if there is a user with the same email
     let foundUser = await User.findOne({ "local.email": email })
