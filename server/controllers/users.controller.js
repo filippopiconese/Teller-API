@@ -24,26 +24,12 @@ module.exports = {
     }
 
     // Is there a Google account with the same email?
-    foundUser = await User.findOne({ "google.email": email })
-
-    if (foundUser) {
-      // Let's merge them
-      foundUser.methods.push('local')
-      foundUser.local = {
-        email: email,
-        password: password
-      }
-      await foundUser.save()
-
-      // Generate new token
-      const token = signToken(foundUser)
-
-      // Respond with token
-      return res.status(200).json({ token })
-    }
-
-    // Is there a Facebook account with the same email?
-    foundUser = await User.findOne({ "facebook.email": email })
+    foundUser = await User.findOne({
+      $or: [
+        { "google.email": email },
+        { "facebook.email": email }
+      ]
+    })
 
     if (foundUser) {
       // Let's merge them
@@ -158,7 +144,6 @@ module.exports = {
   },
 
   dashboard: async (req, res, next) => {
-    console.log('I managed to get here!')
     res.json({
       secret: 'Resource',
       methods: req.user.methods

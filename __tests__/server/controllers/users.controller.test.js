@@ -16,6 +16,7 @@ describe('Users controller', () => {
   let req = {
     user: {
       id: faker.random.number(),
+      methods: ['local', 'google', 'facebook']
     },
     value: {
       body: {
@@ -34,29 +35,24 @@ describe('Users controller', () => {
   }
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
   })
 
   afterEach(() => {
     sandbox.restore()
   })
 
-  describe('secret', () => {
+  describe('dashboard', () => {
     it('should return resource when called', async () => {
       sandbox.spy(console, 'log')
       sandbox.spy(res, 'json')
 
       try {
-        await userController.secret(req, res)
+        await userController.dashboard(req, res)
 
-        expect(console.log).to.have.been.called
-        expect(
-          res.json.calledWith({
-            secret: 'Resource',
-          }),
-        ).to.be.ok
         expect(res.json).to.have.been.calledWith({
           secret: 'Resource',
+          methods: ['local', 'google', 'facebook']
         })
       } catch (error) {
         throw new Error(error)

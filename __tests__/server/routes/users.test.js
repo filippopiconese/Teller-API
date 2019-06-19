@@ -13,14 +13,14 @@ let token
 describe('Users route', () => {
   const signup = '/users/signup'
   const signin = '/users/signin'
-  const secret = '/users/secret'
+  const dashboard = '/users/dashboard'
   const user = {
     email: faker.internet.email(),
     password: faker.internet.password()
   }
   const preSave = {
     email: 'mr.sometest@gmail.com',
-    password: faker.internet.password()
+    password: 'password'
   }
 
   before(async () => {
@@ -67,10 +67,10 @@ describe('Users route', () => {
     })
   })
 
-  describe('secret', () => {
+  describe('dashboard', () => {
     it('should return status 401', async () => {
       try {
-        await chai.request(server).get(secret)
+        await chai.request(server).get(dashboard)
       } catch (err) {
         expect(err.status).to.equal(401)
         expect(err.response.text).to.equal('Unauthorized')
@@ -81,10 +81,10 @@ describe('Users route', () => {
       try {
         const res = await chai
           .request(server)
-          .get(secret)
+          .get(dashboard)
           .set('Authorization', token)
         expect(res.status).to.equal(200)
-        expect(res.body).to.deep.equal({ secret: 'Resource' })
+        expect(res.body).to.deep.equal({ secret: 'Resource', methods: ['local'] })
       } catch (err) {
         throw new Error(err)
       }
