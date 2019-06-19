@@ -144,6 +144,10 @@ passport.use(new LocalStrategy({
       return done(null, false)
     }
 
+    console.log('email', email)
+    console.log('password', password)
+
+
     // Check if the password is correct
     const isMatch = await user.isValidPassword(password)
 
