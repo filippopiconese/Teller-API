@@ -24,7 +24,7 @@ module.exports = {
     signupSchema: Joi.object().keys({
       email: Joi.string().email().required(),
       password: Joi.string().required(),
-      code: Joi.string().required().alphanum().min(1).max(1)
+      code: Joi.string().required().alphanum()
     }),
     signinSchema: Joi.object().keys({
       email: Joi.string().email().required(),

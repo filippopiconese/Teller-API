@@ -6,13 +6,14 @@ const rewire = require('rewire')
 const { expect } = chai
 
 const User = require('../../../server/models/user.model')
+const Code = require('../../../server/models/tellerCodes.model')
 const userController = rewire('../../../server/controllers/users.controller')
 
 chai.use(sinonChai)
 
 let sandbox = null
 
-describe.skip('Users controller', () => {
+describe('Users controller', () => {
   let req = {
     user: {
       id: faker.random.number(),
@@ -20,8 +21,9 @@ describe.skip('Users controller', () => {
     },
     value: {
       body: {
+        code: '1',
         email: faker.internet.email(),
-        password: faker.internet.password(),
+        password: faker.internet.password()
       },
     },
   }
@@ -96,12 +98,29 @@ describe.skip('Users controller', () => {
   })
 
   describe('signUp', () => {
+    it('should return 404 if code does not exist in the db.', async () => {
+      sandbox.spy(res, 'json')
+      sandbox.spy(res, 'status')
+      sandbox.stub(Code, 'findOne').returns(false)
+
+      try {
+        await userController.signUp(req, res)
+
+        expect(res.status).to.have.been.calledWith(404)
+        expect(res.json).to.have.been.calledWith({
+          error: 'Code not found',
+        })
+      } catch (error) {
+        throw new Error(error)
+      }
+    })
+
     it('should return 403 if the user is already save in the db.', async () => {
       sandbox.spy(res, 'json')
       sandbox.spy(res, 'status')
       sandbox.stub(User, 'findOne').returns(
         Promise.resolve({
-          id: faker.random.number(),
+          id: faker.random.number()
         }),
       )
 

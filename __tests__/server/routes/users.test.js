@@ -60,6 +60,22 @@ describe('Users route', () => {
       }
     })
 
+    it('should return 404 if code is not in the db', async () => {
+      try {
+        await chai
+          .request(server)
+          .post(signup)
+          .send({
+            email: 'mr.sometest@gmail.com',
+            password: 'password',
+            code: '1111'
+          })
+      } catch (err) {
+        expect(err.status).to.equal(404)
+        expect(err.response.text).to.equal('{"error":"Code not found"}')
+      }
+    })
+
     it('should return 403 if email was found', async () => {
       try {
         await chai

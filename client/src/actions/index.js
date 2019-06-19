@@ -62,7 +62,11 @@ export const signUp = data => {
     } catch (error) {
       dispatch({
         type: AUTH_ERROR,
-        payload: 'Email is already in use'
+        payload: error.message.includes('404')
+          ? 'The Teller code inserted is wrong'
+          : error.message.includes('409')
+            ? 'Code already used'
+            : 'Email is already in use'
       })
     }
   }

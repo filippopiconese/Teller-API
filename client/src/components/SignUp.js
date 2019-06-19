@@ -14,8 +14,6 @@ class SignUp extends Component {
   }
 
   async onSubmit(formData) {
-    console.log('formData', formData)
-
     // We need to call some Action Creator
     await this.props.signUp(formData)
 
