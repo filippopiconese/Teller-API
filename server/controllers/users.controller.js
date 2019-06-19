@@ -25,12 +25,13 @@ module.exports = {
       return res.status(404).json({ error: 'Code not found' })
     }
 
-    // // Check if the code is available
-    // let foundUser = await User.findOne({ "local.email": email })
-    // if (foundUser) {
-    //   console.info(status[409])
-    //   return res.status(409).json({ error: 'Code already in use' })
-    // }
+    // Check if the code is available
+    const query = { "code": code, "used": false }
+    let codeAvailable = await Code.findOne(query)
+    if (!codeAvailable) {
+      console.info(status[409])
+      return res.status(409).json({ error: 'Code already in use' })
+    }
 
     // Check if there is a user with the same email
     let foundUser = await User.findOne({ "local.email": email })
@@ -38,6 +39,9 @@ module.exports = {
       console.info(status[403])
       return res.status(403).json({ error: 'Email is already in use' })
     }
+
+    // If we arrive here, the code exists and is not already in use, therefore we can assign that code to this account
+    await Code.updateOne(query, { "code": code, "used": true, "email": email })
 
     // Create a new user
     const newUser = new User({

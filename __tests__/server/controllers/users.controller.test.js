@@ -21,7 +21,7 @@ describe('Users controller', () => {
     },
     value: {
       body: {
-        code: '1',
+        code: '4',
         email: faker.internet.email(),
         password: faker.internet.password()
       },
@@ -49,16 +49,12 @@ describe('Users controller', () => {
       sandbox.spy(console, 'log')
       sandbox.spy(res, 'json')
 
-      try {
-        await userController.dashboard(req, res)
+      await userController.dashboard(req, res)
 
-        expect(res.json).to.have.been.calledWith({
-          secret: 'Resource',
-          methods: ['local', 'google', 'facebook']
-        })
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.json).to.have.been.calledWith({
+        secret: 'Resource',
+        methods: ['local', 'google', 'facebook']
+      })
     })
   })
 
@@ -67,14 +63,10 @@ describe('Users controller', () => {
       sandbox.spy(res, 'json')
       sandbox.spy(res, 'status')
 
-      try {
-        await userController.signIn(req, res)
+      await userController.signIn(req, res)
 
-        expect(res.status).to.have.been.calledWith(200)
-        expect(res.json.callCount).to.equal(1)
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(200)
+      expect(res.json.callCount).to.equal(1)
     })
 
     it('should return fake token using rewire', async () => {
@@ -84,38 +76,43 @@ describe('Users controller', () => {
       // fake jwt token with rewire
       let signToken = userController.__set__('signToken', user => 'fakeToken')
 
-      try {
-        await userController.signIn(req, res)
+      await userController.signIn(req, res)
 
-        expect(res.json).to.have.been.calledWith({
-          token: 'fakeToken',
-        })
-        signToken()
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.json).to.have.been.calledWith({
+        token: 'fakeToken',
+      })
+      signToken()
     })
   })
 
   describe('signUp', () => {
-    it('should return 404 if code does not exist in the db.', async () => {
+    it('should return 404 if code does not exist in the db', async () => {
       sandbox.spy(res, 'json')
       sandbox.spy(res, 'status')
-      sandbox.stub(Code, 'findOne').returns(false)
 
-      try {
-        await userController.signUp(req, res)
+      req.value.body.code = '1111'
+      await userController.signUp(req, res)
 
-        expect(res.status).to.have.been.calledWith(404)
-        expect(res.json).to.have.been.calledWith({
-          error: 'Code not found',
-        })
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(404)
+      expect(res.json).to.have.been.calledWith({
+        error: 'Code not found',
+      })
     })
 
-    it('should return 403 if the user is already save in the db.', async () => {
+    it('should return 409 if code is already in use', async () => {
+      sandbox.spy(res, 'json')
+      sandbox.spy(res, 'status')
+
+      req.value.body.code = '10'
+      await userController.signUp(req, res)
+
+      expect(res.status).to.have.been.calledWith(409)
+      expect(res.json).to.have.been.calledWith({
+        error: 'Code already in use',
+      })
+    })
+
+    it('should return 403 if the user email is already saved in the db', async () => {
       sandbox.spy(res, 'json')
       sandbox.spy(res, 'status')
       sandbox.stub(User, 'findOne').returns(
@@ -124,16 +121,14 @@ describe('Users controller', () => {
         }),
       )
 
-      try {
-        await userController.signUp(req, res)
+      req.value.body.code = '5'
+      req.value.body.email = 'test@test.com'
+      await userController.signUp(req, res)
 
-        expect(res.status).to.have.been.calledWith(403)
-        expect(res.json).to.have.been.calledWith({
-          error: 'Email is already in use',
-        })
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(403)
+      expect(res.json).to.have.been.calledWith({
+        error: 'Email is already in use',
+      })
     })
 
     it('should return 200 if user is not in db and it was saved', async () => {
@@ -146,14 +141,11 @@ describe('Users controller', () => {
         }),
       )
 
-      try {
-        await userController.signUp(req, res)
+      req.value.body.code = '6'
+      await userController.signUp(req, res)
 
-        expect(res.status).to.have.been.calledWith(200)
-        expect(res.json.callCount).to.equal(1)
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(200)
+      expect(res.json.callCount).to.equal(1)
     })
 
     it('should return 200 if user is not in db using callback done', async () => {
@@ -166,14 +158,11 @@ describe('Users controller', () => {
         }),
       )
 
-      try {
-        await userController.signUp(req, res)
+      req.value.body.code = '7'
+      await userController.signUp(req, res)
 
-        expect(res.status).to.have.been.calledWith(200)
-        expect(res.json.callCount).to.equal(1)
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(200)
+      expect(res.json.callCount).to.equal(1)
     })
 
     it('should return fake token in res.json', async () => {
@@ -188,16 +177,13 @@ describe('Users controller', () => {
 
       let signToken = userController.__set__('signToken', user => 'fakeTokenNumberTwo')
 
-      try {
-        await userController.signUp(req, res)
+      req.value.body.code = '8'
+      await userController.signUp(req, res)
 
-        expect(res.json).to.have.been.calledWith({
-          token: 'fakeTokenNumberTwo',
-        })
-        signToken()
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.json).to.have.been.calledWith({
+        token: 'fakeTokenNumberTwo',
+      })
+      signToken()
     })
   })
 
@@ -208,17 +194,13 @@ describe('Users controller', () => {
 
       let signToken = userController.__set__('signToken', user => 'fakeTokenFromGoogleController')
 
-      try {
-        await userController.googleOAuth(req, res)
+      await userController.googleOAuth(req, res)
 
-        expect(res.status).to.have.been.calledWith(200)
-        expect(res.json).to.have.been.calledWith({
-          token: 'fakeTokenFromGoogleController',
-        })
-        signToken()
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(200)
+      expect(res.json).to.have.been.calledWith({
+        token: 'fakeTokenFromGoogleController',
+      })
+      signToken()
     })
   })
 
@@ -229,17 +211,13 @@ describe('Users controller', () => {
 
       let signToken = userController.__set__('signToken', user => 'fakeTokenFromFacebookController')
 
-      try {
-        await userController.facebookOAuth(req, res)
+      await userController.facebookOAuth(req, res)
 
-        expect(res.status).to.have.been.calledWith(200)
-        expect(res.json).to.have.been.calledWith({
-          token: 'fakeTokenFromFacebookController',
-        })
-        signToken()
-      } catch (error) {
-        throw new Error(error)
-      }
+      expect(res.status).to.have.been.calledWith(200)
+      expect(res.json).to.have.been.calledWith({
+        token: 'fakeTokenFromFacebookController',
+      })
+      signToken()
     })
   })
 })

@@ -9,7 +9,6 @@ const Code = require('./models/tellerCodes.model')
 
 mongoose.Promise = global.Promise
 
-
 mongoose.connect(mongoUri, { useNewUrlParser: true })
   .catch((error) => {
     console.error(error + `
@@ -27,32 +26,26 @@ if (!process.env.NODE_ENV === 'test') {
 }
 if (process.env.NODE_ENV === 'test') {
   // get reference to database
-  let db = mongoose.connection
+  const db = mongoose.connection
 
   db.on('error', console.error.bind(console, 'connection error:'))
 
-  db.once('open', function () {
+  db.once('open', async () => {
     console.log("Connection Successful!")
 
-    // define Schema
-    // const codeSchema = mongoose.Schema({
-    //   code: String,
-    //   used: Boolean
-    // })
+    // Create a code already used in order to test the permission denied
+    // Leave this insertion as it is, otherwise one test occasionally crash
+    const code = new Code({ code: '10', used: true, email: "test@test.com" })
+    await code.save()
 
-    // compile schema to model
-    // let Code = mongoose.model('tellerCode', codeSchema, 'tellerCodes')
-
-    // a document instance
-    let code1 = new Code({ code: '1', used: false })
-
-    // save model to database
-    code1.save(function (err, book) {
-      if (err) return console.error(err)
-      console.log(code1.code + " saved to tellerCodes collection.")
-    })
-
+    // Populate the test database with 10 new codes
+    for (let i = 1; i < 10; i++) {
+      const code = new Code({ code: `${i}`, used: false, email: "" })
+      await code.save()
+    }
   })
+
+  console.log('Test db populated!')
 }
 
 app.use(cors())

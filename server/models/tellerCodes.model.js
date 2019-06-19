@@ -10,16 +10,11 @@ const codeSchema = new Schema({
   used: {
     type: Boolean,
     required: true
+  },
+  email: {
+    type: String
   }
 })
-
-// codeSchema.methods.isValidCode = async function (code) {
-//   try {
-//     return await e, this.local.password)
-//   } catch (error) {
-//     throw new Error(error)
-//   }
-// }
 
 // Create a model
 const Code = mongoose.model('tellerCode', codeSchema, 'tellerCodes')

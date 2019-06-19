@@ -63,9 +63,9 @@ export const signUp = data => {
       dispatch({
         type: AUTH_ERROR,
         payload: error.message.includes('404')
-          ? 'The Teller code inserted is wrong'
+          ? 'Code is wrong'
           : error.message.includes('409')
-            ? 'Code already used'
+            ? 'Code is already in use'
             : 'Email is already in use'
       })
     }
