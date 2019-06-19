@@ -123,17 +123,8 @@ passport.use('facebookToken', new FacebookTokenStrategy({
         return done(null, existingUser)
       }
 
-      // If new account
-      const newUser = new User({
-        methods: ['facebook'],
-        facebook: {
-          id: profile.id,
-          email: profile.emails[0].value
-        }
-      })
-
-      await newUser.save()
-      done(null, newUser)
+      // If new account, you have BEFORE to sign-up inserting the toy code, the email and choose a password.
+      return done(null, false, { message: 'You have not an account, yet!' });
     }
   } catch (error) {
     done(error, false, error.message)

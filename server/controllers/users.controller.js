@@ -38,30 +38,6 @@ module.exports = {
       return res.status(403).json({ error: 'Email is already in use' })
     }
 
-    // Is there a Google account with the same email?
-    foundUser = await User.findOne({
-      $or: [
-        { "google.email": email },
-        { "facebook.email": email }
-      ]
-    })
-
-    if (foundUser) {
-      // Let's merge them
-      foundUser.methods.push('local')
-      foundUser.local = {
-        email: email,
-        password: password
-      }
-      await foundUser.save()
-
-      // Generate new token
-      const token = signToken(foundUser)
-
-      // Respond with token
-      return res.status(200).json({ token })
-    }
-
     // Create a new user
     const newUser = new User({
       methods: ['local'],

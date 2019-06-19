@@ -22,9 +22,10 @@ Follow these steps:
 const app = express()
 
 // Middlewears moved morgan into if for clear tests
-if (!process.env.NODE_ENV == 'test') {
+if (!process.env.NODE_ENV === 'test') {
   app.use(morgan('dev'))
-} else {
+}
+if (process.env.NODE_ENV === 'test') {
   // get reference to database
   let db = mongoose.connection
 
