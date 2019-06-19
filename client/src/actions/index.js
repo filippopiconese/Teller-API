@@ -6,6 +6,8 @@ import {
   AUTH_SIGN_IN,
   AUTH_LINK_GOOGLE,
   AUTH_LINK_FACEBOOK,
+  AUTH_UNLINK_GOOGLE,
+  AUTH_UNLINK_FACEBOOK,
   AUTH_ERROR,
   DASHBOARD_GET_DATA
 } from './types'
@@ -137,6 +139,17 @@ export const linkGoogle = data => {
   }
 }
 
+export const unlinkGoogle = data => {
+  return async dispatch => {
+    const res = await axios.post('http://localhost:5000/users/oauth/unlink/google')
+
+    dispatch({
+      type: AUTH_UNLINK_GOOGLE,
+      payload: res.data
+    })
+  }
+}
+
 export const linkFacebook = data => {
   return async dispatch => {
     const res = await axios.post('http://localhost:5000/users/oauth/link/facebook', {
@@ -145,6 +158,17 @@ export const linkFacebook = data => {
 
     dispatch({
       type: AUTH_LINK_FACEBOOK,
+      payload: res.data
+    })
+  }
+}
+
+export const unlinkFacebook = data => {
+  return async dispatch => {
+    const res = await axios.post('http://localhost:5000/users/oauth/unlink/facebook')
+
+    dispatch({
+      type: AUTH_UNLINK_FACEBOOK,
       payload: res.data
     })
   }

@@ -15,9 +15,19 @@ class Dashboard extends Component {
     await this.props.linkFacebook(res.accessToken)
   }
 
+  unlinkFacebook = async () => {
+    console.log('Unlink Facebook')
+    await this.props.unlinkFacebook()
+  }
+
   linkGoogle = async (res) => {
     console.log('Link with Google', res)
     await this.props.linkGoogle(res.accessToken)
+  }
+
+  unlinkGoogle = async () => {
+    console.log('Unlink Google')
+    await this.props.unlinkGoogle()
   }
 
   render() {
@@ -47,24 +57,26 @@ class Dashboard extends Component {
         />
 
         <br />
+        <br />
+        <br />
 
         <h2>Unlink your social media accounts</h2>
-        <FacebookLogin
-          appId="342011239791372"
-          render={renderProps => (
-            <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick} disabled={renderProps.disabled}>Unlink with Facebook</button>
-          )}
-          fields="name,email,picture"
-          callback={this.linkFacebook}
-        />
-        <GoogleLogin
-          clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
-          render={renderProps => (
-            <button className="btn btn-danger" onClick={renderProps.onClick} disabled={renderProps.disabled}>Unlink with Google</button>
-          )}
-          onSuccess={this.linkGoogle}
-          onFailure={this.linkGoogle}
-        />
+        <button
+          style={{ marginRight: 15 }}
+          className="btn btn-primary"
+          onClick={() => this.unlinkFacebook()}
+          disabled={this.props.dashboard.methods.includes('facebook') ? false : true}
+        >
+          Unlink from Facebook
+        </button>
+
+        <button
+          className="btn btn-danger"
+          onClick={() => this.unlinkGoogle()}
+          disabled={this.props.dashboard.methods.includes('google') ? false : true}
+        >
+          Unlink from Google
+        </button>
       </div>
     )
   }

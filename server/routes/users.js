@@ -25,8 +25,14 @@ router.route('/oauth/facebook')
 router.route('/oauth/link/google')
   .post(passportJWT, passport.authorize('googleToken', { session: false }), UserController.linkGoogle)
 
+router.route('/oauth/unlink/google')
+  .post(passportJWT, UserController.unlinkGoogle)
+
 router.route('/oauth/link/facebook')
   .post(passportJWT, passport.authorize('facebookToken', { session: false }), UserController.linkFacebook)
+
+router.route('/oauth/unlink/facebook')
+  .post(passportJWT, UserController.unlinkFacebook)
 
 router.route('/dashboard')
   .get(passportJWT, UserController.dashboard)

@@ -100,6 +100,27 @@ module.exports = {
     })
   },
 
+  unlinkGoogle: async (req, res, next) => {
+    // Delete Google sub-object
+    if (req.user.google) {
+      req.user.google = undefined
+    }
+
+    // Remove 'google' from methods array
+    const googleStrPos = req.user.methods.indexOf('google')
+    if (googleStrPos >= 0) {
+      req.user.methods.splice(googleStrPos, 1)
+    }
+    await req.user.save()
+
+    // Return something
+    res.json({
+      success: true,
+      methods: req.user.methods,
+      message: 'Successfully unlinked account from Google'
+    })
+  },
+
   facebookOAuth: async (req, res, next) => {
     // Generate token
     const token = signToken(req.user)
@@ -112,6 +133,27 @@ module.exports = {
       success: true,
       methods: req.user.methods,
       message: 'Successfully linked account with Facebook'
+    })
+  },
+
+  unlinkFacebook: async (req, res, next) => {
+    // Delete Facebook sub-object
+    if (req.user.facebook) {
+      req.user.facebook = undefined
+    }
+
+    // Remove 'facebook' from methods array
+    const facebookStrPos = req.user.methods.indexOf('facebook')
+    if (facebookStrPos >= 0) {
+      req.user.methods.splice(facebookStrPos, 1)
+    }
+    await req.user.save()
+
+    // Return something
+    res.json({
+      success: true,
+      methods: req.user.methods,
+      message: 'Successfully unlinked account from Facebook'
     })
   },
 
