@@ -16,11 +16,13 @@ describe('Users route', () => {
   const dashboard = '/users/dashboard'
   const user = {
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: faker.internet.password(),
+    code: '1'
   }
   const preSave = {
     email: 'mr.sometest@gmail.com',
-    password: 'password'
+    password: 'password',
+    code: '1'
   }
 
   before(async () => {

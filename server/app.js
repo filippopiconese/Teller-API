@@ -4,25 +4,19 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
-const { atlasUri, userUri, testUri } = require('./configuration')
+const { mongoUri } = require('./configuration')
 
 mongoose.Promise = global.Promise
-if (process.env.NODE_ENV == 'test') {
-  mongoose.connect(testUri, { useNewUrlParser: true })
-    .catch((error) => {
-      console.error(error + '\nCheck whether service mongod has started correctly - sudo service mongod start')
-    })
-} else if (process.env.NODE_ENV == 'prod') {
-  mongoose.connect(atlasUri, { useNewUrlParser: true })
-    .catch((error) => {
-      console.error(error + '\nAdd current IP to Atlas MongoDB + sudo service mongod start')
-    })
-} else {
-  mongoose.connect(userUri, { useNewUrlParser: true })
-    .catch((error) => {
-      console.error(error + '\nCheck whether service mongod has started correctly - sudo service mongod start')
-    })
-}
+
+
+mongoose.connect(mongoUri, { useNewUrlParser: true })
+  .catch((error) => {
+    console.error(error + `
+Follow these steps:
+1) If you are running this program locally, make sure that mongo has started. Type: "sudo service mongod start"
+2) If you are running this program in production, make sure that the current IP is added in your MongoDB Atlas
+`)
+  })
 
 const app = express()
 

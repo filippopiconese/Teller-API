@@ -23,7 +23,8 @@ module.exports = {
   schemas: {
     authSchema: Joi.object().keys({
       email: Joi.string().email().required(),
-      password: Joi.string().required().regex(/^[a-zA-Z0-9]{3,30}$/)
+      password: Joi.string().required().regex(/^[a-zA-Z0-9]{3,30}$/),
+      code: Joi.string().required().alphanum().min(1).max(1)
     })
   }
 }

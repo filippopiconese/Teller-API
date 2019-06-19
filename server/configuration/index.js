@@ -3,7 +3,7 @@ dotenv.config()
 
 if (process.env.NODE_ENV === 'test') {
   module.exports = {
-    testUri: process.env.MONGO_TEST_URI,
+    mongoUri: process.env.MONGO_TEST_URI,
     jwt_secret: 'tellerAppAuthentication',
     oauth: {
       google: {
@@ -18,8 +18,7 @@ if (process.env.NODE_ENV === 'test') {
   }
 } else {
   module.exports = {
-    atlasUri: process.env.MONGO_ATLAS_URI,
-    userUri: process.env.MONGO_USER_URI,
+    mongoUri: process.env.NODE_ENV === 'prod' ? process.env.MONGO_ATLAS_URI : process.env.MONGO_LOCAL_URI,
     port: process.env.PORT || 5000,
     jwt_secret: process.env.JWT_SECRET,
     oauth: {

@@ -48,13 +48,6 @@ export const oauthFacebook = data => {
 }
 
 export const signUp = data => {
-  /*
-    Step 1) Use the form data and make HTTP request to our Back-End and send it along (axios library needed) [X]
-    Step 2) Take the BE's response (jwtToken is here now!) [X]
-    Step 3) Dispatch user just signed up (with jwtToken) [X]
-    Step 4) Save the jwtToken into our localStorage [X]
-  */
-
   return async dispatch => {
     try {
       console.log('[ActionCreator] signUp called!', data)

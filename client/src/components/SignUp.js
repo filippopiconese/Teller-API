@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { reduxForm, Field } from 'redux-form'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import GoogleLogin from 'react-google-login'
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
 import * as actions from '../actions'
 import CustomInput from './Custominput'
@@ -27,7 +25,6 @@ class SignUp extends Component {
   }
 
   async responseGoogle(res) {
-    console.log('responseGoogle', res)
     await this.props.oauthGoogle(res.accessToken)
 
     if (!this.props.errorMessage) {
@@ -36,7 +33,6 @@ class SignUp extends Component {
   }
 
   async responseFacebook(res) {
-    console.log('responseFacebook', res)
     await this.props.oauthFacebook(res.accessToken)
 
     if (!this.props.errorMessage) {
@@ -51,6 +47,16 @@ class SignUp extends Component {
       <div className="row">
         <div className="col">
           <form onSubmit={handleSubmit(this.onSubmit)}>
+            <fieldset>
+              <Field
+                name="code"
+                type="text"
+                id="code"
+                label="Enter your Teller code"
+                placeholder="1"
+                component={CustomInput}
+              />
+            </fieldset>
             <fieldset>
               <Field
                 name="email"
@@ -82,29 +88,6 @@ class SignUp extends Component {
 
             <button type="submit" className="btn btn-primary">Sign Up</button>
           </form>
-        </div>
-        <div className="col">
-          <div className="text-center">
-            <div className="alert alert-primary">
-              Or sign-up using third-party services
-            </div>
-            <FacebookLogin
-              appId="342011239791372"
-              render={renderProps => (
-                <button style={{ marginRight: 15 }} className="btn btn-primary" onClick={renderProps.onClick}>Facebook</button>
-              )}
-              fields="name,email,picture"
-              callback={this.responseFacebook}
-            />
-            <GoogleLogin
-              clientId="36699314176-o4be1skj1rn48ve97uerbomaed1d7meo.apps.googleusercontent.com"
-              render={renderProps => (
-                <button className="btn btn-danger" onClick={renderProps.onClick}>Google</button>
-              )}
-              onSuccess={this.responseGoogle}
-              onFailure={this.responseGoogle}
-            />
-          </div>
         </div>
       </div>
     )
