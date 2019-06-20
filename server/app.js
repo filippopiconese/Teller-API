@@ -1,5 +1,4 @@
 const express = require('express')
-const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
@@ -20,10 +19,6 @@ Follow these steps:
 
 const app = express()
 
-// Middlewears moved morgan into if for clear tests
-if (!process.env.NODE_ENV === 'test') {
-  app.use(morgan('dev'))
-}
 if (process.env.NODE_ENV === 'test') {
   // get reference to database
   const db = mongoose.connection

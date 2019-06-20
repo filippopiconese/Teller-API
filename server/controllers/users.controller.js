@@ -19,7 +19,6 @@ module.exports = {
 
     // Check if the provided code exists
     const existCode = await Code.findOne({ "code": code })
-
     if (!existCode) {
       console.info(status[404])
       return res.status(404).json({ error: 'Code not found' })
@@ -27,14 +26,14 @@ module.exports = {
 
     // Check if the code is available
     const query = { "code": code, "used": false }
-    let codeAvailable = await Code.findOne(query)
+    const codeAvailable = await Code.findOne(query)
     if (!codeAvailable) {
       console.info(status[409])
       return res.status(409).json({ error: 'Code already in use' })
     }
 
     // Check if there is a user with the same email
-    let foundUser = await User.findOne({ "local.email": email })
+    const foundUser = await User.findOne({ "local.email": email })
     if (foundUser) {
       console.info(status[403])
       return res.status(403).json({ error: 'Email is already in use' })
