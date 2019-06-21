@@ -20,7 +20,6 @@ Follow these steps:
 const app = express()
 
 if (process.env.NODE_ENV === 'test') {
-  // get reference to database
   const connection = mongoose.connection
 
   connection.on('error', console.error.bind(console, 'connection error:'))
