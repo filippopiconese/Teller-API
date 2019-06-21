@@ -22,8 +22,10 @@ module.exports = {
           return res.status(404).json({ error: 'Stories not found' })
         }
 
+        const mediaDetails = files.map(function (media) { return media['filename'] })
+
         return res.status(200).json({
-          media: files
+          media: mediaDetails
         })
       })
     })
