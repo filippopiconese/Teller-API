@@ -41,4 +41,7 @@ router.route('/dashboard')
 router.route('/dashboard/media')
   .get(passportJWT, MediaController.getMediaList)
 
+router.route('/dashboard/media/download')
+  .get(passportJWT, MediaController.downloadMedia)
+
 module.exports = router
