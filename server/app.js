@@ -21,11 +21,11 @@ const app = express()
 
 if (process.env.NODE_ENV === 'test') {
   // get reference to database
-  const db = mongoose.connection
+  const connection = mongoose.connection
 
-  db.on('error', console.error.bind(console, 'connection error:'))
+  connection.on('error', console.error.bind(console, 'connection error:'))
 
-  db.once('open', async () => {
+  connection.once('open', async () => {
     console.log("Connection Successful!")
 
     // Create a code already used in order to test the permission denied

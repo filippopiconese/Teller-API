@@ -1,10 +1,11 @@
 const express = require('express')
 const router = require('express-promise-router')()
 const passport = require('passport')
-const passportConf = require('../passport')
+const passportConf = require('../passport') // This is needed for the strategies 'jwt', 'googleToken' and 'facebookToken'
 
 const { validateBody, schemas } = require('../helpers/routeHelpers')
 const UserController = require('../controllers/users.controller')
+const MediaController = require('../controllers/media.controller')
 const passportSignIn = passport.authenticate('local', { session: false })
 const passportGoogle = passport.authenticate('googleToken', { session: false })
 const passportFacebook = passport.authenticate('facebookToken', { session: false })
@@ -36,5 +37,8 @@ router.route('/oauth/unlink/facebook')
 
 router.route('/dashboard')
   .get(passportJWT, UserController.dashboard)
+
+router.route('/dashboard/media')
+  .get(passportJWT, MediaController.getMediaList)
 
 module.exports = router
